@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:fragment="layout(content)">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akcan</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+	integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+	:root {
+		--primary-color: #007bff;
+		--primary-dark: #0056b3;
+		--secondary-color: #6c757d;
+		--light-color: #f8f9fa;
+		--dark-color: #343a40;
+	}
+
+	body {
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		padding-top: 76px;
+	}
+
+	/* Navbar Styles */
+	.navbar {
+		background: linear-gradient(to right, var(--primary-color), var(--primary-dark)) !important;
+		padding: 1rem;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		transition: all 0.3s ease;
+	}
+
+	.navbar-brand {
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: white !important;
+		transition: all 0.3s ease;
+		display: flex;
+		align-items: center;
+		gap: 0.8rem;
+	}
+	
+	.brand-logo-container {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		border: 2px solid rgba(255, 255, 255, 0.8);
+	}
+	
+	.brand-logo {
+		width: 85%;
+		height: auto;
+		object-fit: contain;
+	}
+	
+	.brand-text {
+		font-size: 1.5rem;
+		font-weight: 600;
+	}
+
+	.navbar-brand:hover {
+		transform: translateY(-2px);
+	}
+
+	.nav-link {
+		color: rgba(255, 255, 255, 0.9) !important;
+		font-weight: 500;
+		padding: 0.5rem 1rem !important;
+		border-radius: 5px;
+		transition: all 0.3s ease;
+	}
+
+	.nav-link:hover {
+		color: white !important;
+		background: rgba(255, 255, 255, 0.1);
+		transform: translateY(-2px);
+	}
+
+	.nav-link.active {
+		color: white !important;
+		background: rgba(255, 255, 255, 0.2);
+	}
+
+	.navbar-toggler {
+		border: none;
+		padding: 0.5rem;
+	}
+
+	.navbar-toggler:focus {
+		box-shadow: none;
+	}
+
+	/* Dropdown Styles */
+	.dropdown-menu {
+		border: none;
+		border-radius: 10px;
+		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+		padding: 0.5rem;
+		animation: fadeIn 0.3s ease;
+	}
+
+	.dropdown-item {
+		padding: 0.7rem 1.2rem;
+		border-radius: 5px;
+		transition: all 0.3s ease;
+	}
+
+	.dropdown-item:hover {
+		background: var(--light-color);
+		transform: translateX(5px);
+	}
+
+	.dropdown-divider {
+		margin: 0.5rem 0;
+		border-color: var(--light-color);
+	}
+
+	/* Cart Badge */
+	.cart-badge {
+		background: rgba(255, 255, 255, 0.2);
+		padding: 0.3rem 0.8rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		margin-left: 0.5rem;
+	}
+
+	/* User Menu */
+	.user-menu .dropdown-toggle::after {
+		display: none;
+	}
+
+	.user-menu .nav-link {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	/* Footer */
+	.footer {
+		background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+		color: white;
+		padding: 2rem 0;
+		margin-top: 4rem;
+		text-align: center;
+	}
+
+	.footer-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.footer-logo {
+		font-size: 2rem;
+		font-weight: 700;
+		margin-bottom: 1rem;
+	}
+
+	.footer-text {
+		font-size: 1rem;
+		opacity: 0.9;
+		margin: 0;
+	}
+
+	/* Animations */
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@media (max-width: 768px) {
+		.navbar {
+			padding: 0.8rem;
+		}
+
+		.navbar-brand {
+			font-size: 1.3rem;
+		}
+
+		.nav-link {
+			padding: 0.8rem !important;
+		}
+	}
+
+	/* Menü öğeleri arası boşluk */
+	.navbar-nav .nav-item {
+		margin-right: 1rem;
+	}
+
+	.navbar-nav .nav-item:last-child {
+		margin-right: 0;
+	}
+
+	/* Mobil görünümde boşlukları düzenleme */
+	@media (max-width: 768px) {
+		.navbar-nav .nav-item {
+			margin-right: 0;
+			margin-bottom: 0.5rem;
+		}
+	}
+	
+	/* Akcan AI butonu stili */
+	.ai-button {
+		background-color: rgba(255, 255, 255, 0.2);
+		border-radius: 20px;
+		padding: 0.5rem 1.2rem !important;
+		margin-left: 0.5rem;
+		transition: all 0.3s ease;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.ai-button::before {
+		content: '';
+		position: absolute;
+		top: -50%;
+		left: -50%;
+		width: 200%;
+		height: 200%;
+		background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+		transform: rotate(45deg);
+		transition: all 0.5s ease;
+		opacity: 0;
+	}
+	
+	.ai-button:hover {
+		background-color: rgba(255, 255, 255, 0.3);
+		transform: translateY(-3px);
+		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+	}
+	
+	.ai-button:hover::before {
+		animation: shine 1.5s infinite;
+	}
+	
+	@keyframes shine {
+		0% {
+			left: -100%;
+			opacity: 0.5;
+		}
+		100% {
+			left: 100%;
+			opacity: 0.5;
+		}
+	}
+</style>
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg fixed-top">
+		<div class="container">
+			<a class="navbar-brand" href="#">
+				<div class="brand-logo-container">
+					<img src="/img/logo.png" alt="Akcan Logo" class="brand-logo">
+				</div>
+				<span class="brand-text">Akcan</span>
+			</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<th:block th:if="${user==null}">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="/">
+								<i class="fa-solid fa-house me-2"></i>Ana Sayfa
+							</a>
+						</li>
+					</th:block>
+
+					<th:block th:unless="${user==null}">
+						<li class="nav-item" th:if="${user.role=='ROLE_ADMIN'}">
+							<a class="nav-link active" aria-current="page" href="/admin/">
+								<i class="fa-solid fa-house me-2"></i>Ana Sayfa
+							</a>
+						</li>
+
+						<li class="nav-item" th:if="${user.role=='ROLE_USER'}">
+							<a class="nav-link active" aria-current="page" href="/">
+								<i class="fa-solid fa-house me-2"></i>Ana Sayfa
+							</a>
+						</li>
+					</th:block>
+
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="/products">
+							<i class="fa-solid fa-box me-2"></i>Ürünler
+						</a>
+					</li>
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle active" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="fa-solid fa-tags me-2"></i>Kategori
+						</a>
+						<ul class="dropdown-menu">
+							<li th:each="c:${categorys}">
+								<a class="dropdown-item" th:href="@{'/products?category='+${c.name}}">
+									<i class="fas fa-tag me-2"></i>[[${c.name}]]
+								</a>
+							</li>
+						</ul>
+					</li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link active ai-button" aria-current="page" href="/akcan-ai">
+                            <i class="fa-solid fa-robot me-2"></i>Akcan AI
+                        </a>
+                    </li>
+				</ul>
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+					<th:block th:if="${user==null}">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="/signin">
+								<i class="fa-solid fa-right-to-bracket me-2"></i>GİRİŞ YAP
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="/register">
+								<i class="fa-solid fa-user-plus me-2"></i>KAYIT OL
+							</a>
+						</li>
+					</th:block>
+
+					<th:block th:if="${user!=null}">
+						<th:block th:if="${user.role=='ROLE_USER'}">
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page" href="/user/cart">
+									<i class="fa-solid fa-cart-shopping me-2"></i>Sepet
+									<span class="cart-badge">[[${countCart}]]</span>
+								</a>
+							</li>
+						</th:block>
+						<li class="nav-item dropdown user-menu">
+							<a class="nav-link dropdown-toggle active" href="#" role="button"
+								data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fa-solid fa-user me-2"></i>[[${user.name}]]
+						</a>
+							<ul class="dropdown-menu dropdown-menu-end">
+								<li th:if="${user.role=='ROLE_USER'}">
+									<a class="dropdown-item" href="/user/profile">
+										<i class="fas fa-user-circle me-2"></i>Profil
+									</a>
+								</li>
+
+								<li th:if="${user.role=='ROLE_ADMIN'}">
+									<a class="dropdown-item" href="/admin/profile">
+										<i class="fas fa-user-shield me-2"></i>Profil
+									</a>
+								</li>
+
+								<li th:if="${user.role=='ROLE_USER'}">
+									<a class="dropdown-item" href="/user/user-orders">
+										<i class="fas fa-shopping-bag me-2"></i>Siparişlerim
+									</a>
+								</li>
+								<li><hr class="dropdown-divider"></li>
+								<li>
+									<a class="dropdown-item" href="/logout">
+										<i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap
+									</a>
+								</li>
+							</ul>
+						</li>
+					</th:block>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div th:replace="${content}"></div>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-logo">
+					<i class="fa-solid fa-cart-shopping me-2"></i>AKCAN
+				</div>
+			</div>
+	</div>
+	</footer>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="../js/script.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Akcan</title>
+</head>
+<body>
+	<section>
+		<style>
+			.admin-container {
+				padding: 2rem;
+				background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+				min-height: 100vh;
+			}
+			
+			.admin-card {
+				background: white;
+				border-radius: 15px;
+				border: none;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				transition: all 0.3s ease;
+				overflow: hidden;
+				max-width: 900px;
+				margin: 0 auto;
+			}
+			
+			.admin-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+			}
+			
+			.card-header {
+				background: linear-gradient(45deg, #3498db, #2980b9);
+				color: white;
+				border: none;
+				padding: 1.5rem;
+				border-radius: 15px 15px 0 0;
+			}
+			
+			.card-header .fs-4 {
+				font-weight: 600;
+				margin: 0;
+				letter-spacing: 0.5px;
+			}
+			
+			.form-label {
+				font-weight: 500;
+				color: #2c3e50;
+				margin-bottom: 0.5rem;
+			}
+			
+			.form-control {
+				border-radius: 10px;
+				border: 1px solid #e0e0e0;
+				padding: 0.75rem;
+				transition: all 0.3s ease;
+			}
+			
+			.form-control:focus {
+				box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+				border-color: #3498db;
+			}
+			
+			.success-message {
+				background: linear-gradient(45deg, #2ecc71, #27ae60);
+				color: white;
+				padding: 1rem;
+				border-radius: 10px;
+				margin-top: 1rem;
+				animation: fadeIn 0.5s ease;
+			}
+			
+			.error-message {
+				background: linear-gradient(45deg, #e74c3c, #c0392b);
+				color: white;
+				padding: 1rem;
+				border-radius: 10px;
+				margin-top: 1rem;
+				animation: fadeIn 0.5s ease;
+			}
+			
+			.custom-file-upload {
+				border: 2px dashed #3498db;
+				border-radius: 10px;
+				padding: 1.5rem;
+				text-align: center;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				margin-bottom: 1rem;
+			}
+			
+			.custom-file-upload:hover {
+				background: rgba(52, 152, 219, 0.1);
+			}
+			
+			.btn-primary {
+				background: linear-gradient(45deg, #3498db, #2980b9);
+				border: none;
+				border-radius: 10px;
+				padding: 0.75rem;
+				font-weight: 600;
+				letter-spacing: 0.5px;
+				transition: all 0.3s ease;
+			}
+			
+			.btn-primary:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+			}
+			
+			.form-group {
+				margin-bottom: 1.5rem;
+			}
+			
+			.input-group-text {
+				background: transparent;
+				border-right: none;
+			}
+			
+			.password-input {
+				border-left: none;
+			}
+			
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(-10px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+		</style>
+
+		<div class="admin-container">
+			<div class="admin-card">
+				<div class="card-header text-center">
+					<h2 class="fs-4">Yeni Admin Ekle</h2>
+
+					<th:block th:if="${session.succMsg}">
+						<div class="success-message">
+							<i class="fas fa-check-circle me-2"></i>
+							<span>[[${session.succMsg}]]</span>
+						</div>
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</th:block>
+
+					<th:block th:if="${session.errorMsg}">
+						<div class="error-message">
+							<i class="fas fa-exclamation-circle me-2"></i>
+							<span>[[${session.errorMsg}]]</span>
+						</div>
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</th:block>
+				</div>
+
+				<div class="card-body p-4">
+					<form action="/admin/save-admin" method="post" enctype="multipart/form-data">
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label class="form-label">
+									<i class="fas fa-user me-2"></i>Adı Soyadı
+								</label>
+								<input type="text" name="name" class="form-control" required
+									placeholder="Ad ve soyadı giriniz">
+							</div>
+
+							<div class="col-md-6 form-group">
+								<label class="form-label">
+									<i class="fas fa-phone me-2"></i>Telefon Numarası
+								</label>
+								<input type="tel" name="mobileNumber" class="form-control" required
+									placeholder="05XX XXX XX XX">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="form-label">
+								<i class="fas fa-envelope me-2"></i>Email
+							</label>
+							<input type="email" name="email" class="form-control" required
+								placeholder="ornek@email.com">
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label class="form-label">
+									<i class="fas fa-map-marker-alt me-2"></i>Adres
+								</label>
+								<input type="text" name="address" class="form-control" required
+									placeholder="Sokak, mahalle, bina no">
+							</div>
+
+							<div class="col-md-6 form-group">
+								<label class="form-label">
+									<i class="fas fa-city me-2"></i>Şehir
+								</label>
+								<input type="text" name="city" class="form-control" required
+									placeholder="Şehir giriniz">
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label class="form-label">
+									<i class="fas fa-map me-2"></i>İlçe
+								</label>
+								<input type="text" name="state" class="form-control" required
+									placeholder="İlçe giriniz">
+							</div>
+
+							<div class="col-md-6 form-group">
+								<label class="form-label">
+									<i class="fas fa-map-pin me-2"></i>Posta Kodu
+								</label>
+								<input type="text" name="pincode" class="form-control" required
+									placeholder="XXXXX">
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label class="form-label">
+									<i class="fas fa-lock me-2"></i>Şifre
+								</label>
+								<div class="input-group">
+									<span class="input-group-text">
+										<i class="fas fa-key"></i>
+									</span>
+									<input type="password" name="password" class="form-control password-input" required
+										placeholder="Şifre giriniz">
+								</div>
+							</div>
+
+							<div class="col-md-6 form-group">
+								<label class="form-label">
+									<i class="fas fa-lock me-2"></i>Şifreyi Onayla
+								</label>
+								<div class="input-group">
+									<span class="input-group-text">
+										<i class="fas fa-key"></i>
+									</span>
+									<input type="password" name="cpassword" class="form-control password-input" required
+										placeholder="Şifreyi tekrar giriniz">
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="form-label">
+								<i class="fas fa-image me-2"></i>Profil Resmi
+							</label>
+							<div class="custom-file-upload">
+								<input type="file" name="img" class="form-control" id="fileInput" style="display: none;">
+								<label for="fileInput">
+									<i class="fas fa-cloud-upload-alt fs-3 mb-2"></i>
+									<div>Profil fotoğrafı yüklemek için tıklayınız</div>
+								</label>
+							</div>
+						</div>
+
+						<button type="submit" class="btn btn-primary w-100">
+							<i class="fas fa-user-plus me-2"></i>Admin Ekle
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

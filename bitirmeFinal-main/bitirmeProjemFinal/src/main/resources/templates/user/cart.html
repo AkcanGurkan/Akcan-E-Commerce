@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Sepetim | Akcan</title>
+</head>
+<body>
+	<section>
+		<style>
+			.cart-container {
+				min-height: 100vh;
+				background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+				padding: 3rem 1.5rem;
+			}
+			
+			.cart-card {
+				background: white;
+				border-radius: 15px;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				overflow: hidden;
+				animation: fadeIn 0.5s ease;
+			}
+			
+			.cart-header {
+				background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+				color: white;
+				padding: 1.5rem;
+				text-align: center;
+			}
+			
+			.cart-title {
+				font-size: 1.8rem;
+				font-weight: 600;
+				margin: 0;
+			}
+			
+			.alert {
+				border-radius: 10px;
+				padding: 1rem;
+				margin: 1rem 0;
+				animation: slideIn 0.5s ease;
+			}
+			
+			.cart-table {
+				margin: 0;
+			}
+			
+			.cart-table th {
+				background: #f8f9fa;
+				border-bottom: 2px solid #dee2e6;
+				font-weight: 600;
+				text-transform: uppercase;
+				font-size: 0.85rem;
+				padding: 0.7rem;
+			}
+			
+			.cart-table td {
+				vertical-align: middle;
+				padding: 0.7rem;
+			}
+			
+			.product-img {
+				width: 70px;
+				height: 70px;
+				object-fit: cover;
+				border-radius: 8px;
+				transition: transform 0.3s ease;
+			}
+			
+			.product-img:hover {
+				transform: scale(1.1);
+			}
+			
+			.product-title {
+				font-weight: 600;
+				color: #2c3e50;
+				margin: 0;
+				font-size: 0.95rem;
+			}
+			
+			.quantity-control {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.3rem;
+			}
+			
+			.quantity-btn {
+				width: 26px;
+				height: 26px;
+				border-radius: 50%;
+				border: none;
+				background: #f8f9fa;
+				color: #2c3e50;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.3s ease;
+			}
+			
+			.quantity-btn:hover {
+				background: #007bff;
+				color: white;
+				transform: scale(1.1);
+			}
+			
+			.quantity-text {
+				font-weight: 600;
+				color: #2c3e50;
+				min-width: 40px;
+				text-align: center;
+			}
+			
+			.price {
+				font-weight: 600;
+				color: #28a745;
+				font-size: 0.95rem;
+			}
+			
+			.total-row {
+				background: #f8f9fa;
+			}
+			
+			.total-label {
+				font-size: 1.2rem;
+				font-weight: 700;
+				color: #2c3e50;
+			}
+			
+			.total-price {
+				font-size: 1.2rem;
+				font-weight: 700;
+				color: #28a745;
+			}
+			
+			.checkout-btn {
+				background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+				color: white;
+				padding: 1rem 2.5rem;
+				border-radius: 50px;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				transition: all 0.3s ease;
+				margin: 2rem 0;
+			}
+			
+			.checkout-btn:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+				color: white;
+			}
+			
+			.empty-cart {
+				text-align: center;
+				padding: 3rem;
+			}
+			
+			.empty-cart-icon {
+				font-size: 4rem;
+				color: #6c757d;
+				margin-bottom: 1rem;
+			}
+			
+			.empty-cart-text {
+				font-size: 1.5rem;
+				color: #6c757d;
+				margin-bottom: 2rem;
+			}
+			
+			.continue-shopping-btn {
+				background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+				color: white;
+				padding: 1rem 2rem;
+				border-radius: 50px;
+				font-weight: 600;
+				transition: all 0.3s ease;
+			}
+			
+			.continue-shopping-btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+				color: white;
+			}
+			
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			
+			@keyframes slideIn {
+				from {
+					opacity: 0;
+					transform: translateX(-20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+			
+			@media (max-width: 768px) {
+				.cart-table {
+					display: block;
+					overflow-x: auto;
+					white-space: nowrap;
+				}
+				
+				.cart-title {
+					font-size: 1.5rem;
+				}
+				
+				.checkout-btn {
+					width: 100%;
+					padding: 1rem;
+				}
+			}
+		</style>
+
+		<div class="cart-container">
+			<div class="cart-card">
+				<div class="cart-header">
+					<h2 class="cart-title">Alışveriş Sepetim</h2>
+				</div>
+				
+				<div class="card-body">
+					<!-- Success Message -->
+					<div th:if="${session.succMsg}" class="alert alert-success" role="alert">
+						<i class="fas fa-check-circle me-2"></i>
+						[[${session.succMsg}]]
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</div>
+					
+					<!-- Error Message -->
+					<div th:if="${session.errorMsg}" class="alert alert-danger" role="alert">
+						<i class="fas fa-exclamation-circle me-2"></i>
+						[[${session.errorMsg}]]
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</div>
+					
+					<!-- Empty Cart Message -->
+					<div th:if="${#lists.isEmpty(carts)}" class="empty-cart">
+						<i class="fas fa-shopping-cart empty-cart-icon"></i>
+						<p class="empty-cart-text">Sepetiniz boş</p>
+						<a href="/" class="btn continue-shopping-btn">
+							<i class="fas fa-arrow-left me-2"></i>Alışverişe Devam Et
+						</a>
+					</div>
+					
+					<!-- Cart Items -->
+					<div th:if="${not #lists.isEmpty(carts)}">
+						<div class="table-responsive">
+							<table class="table cart-table">
+								<thead>
+									<tr>
+										<th>Ürün</th>
+										<th>Ürün Adı</th>
+										<th>Fiyat</th>
+										<th class="text-center">Miktar</th>
+										<th>Toplam</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="cart,c:${carts}">
+										<td>
+											<img th:src="@{/static/img/product_img/{image}(image=${cart.product.image})}"
+												class="product-img" th:alt="${cart.product.title}">
+										</td>
+										<td>
+											<h6 class="product-title">[[${cart.product.title}]]</h6>
+										</td>
+										<td>
+											<span class="price">₺[[${#numbers.formatDecimal(cart.product.discountPrice, 1, 'POINT', 2, 'COMMA')}]]</span>
+										</td>
+										<td>
+											<div class="quantity-control">
+												<a th:href="@{'/user/cartQuantityUpdate?sy=de&cid='+${cart.id}}"
+													class="quantity-btn">
+													<i class="fas fa-minus"></i>
+												</a>
+												<span class="quantity-text">[[${cart.quantity}]]</span>
+												<a th:href="@{'/user/cartQuantityUpdate?sy=in&cid='+${cart.id}}"
+													class="quantity-btn">
+													<i class="fas fa-plus"></i>
+												</a>
+											</div>
+										</td>
+										<td>
+											<span class="price">₺[[${#numbers.formatDecimal(cart.totalPrice, 1, 'POINT', 2, 'COMMA')}]]</span>
+										</td>
+									</tr>
+									
+									<!-- Total Row -->
+									<tr class="total-row">
+										<td colspan="3"></td>
+										<td class="text-end total-label">Toplam</td>
+										<td class="total-price">₺[[${#numbers.formatDecimal(totalOrderPrice, 1, 'POINT', 2, 'COMMA')}]]</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						
+						<!-- Checkout Button -->
+						<div class="text-center">
+							<a href="/user/orders" class="btn checkout-btn">
+								<i class="fas fa-credit-card me-2"></i>Ödeme Yap
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

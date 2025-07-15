@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Akcan</title>
+</head>
+<body>
+	<section>
+		<style>
+			.category-container {
+				padding: 2rem;
+				background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+				min-height: 100vh;
+			}
+			
+			.category-card {
+				background: white;
+				border-radius: 15px;
+				border: none;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				transition: all 0.3s ease;
+				overflow: hidden;
+				height: 100%;
+			}
+			
+			.category-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+			}
+			
+			.card-header {
+				background: linear-gradient(45deg, #3498db, #2980b9);
+				color: white;
+				border: none;
+				padding: 1.5rem;
+				border-radius: 15px 15px 0 0;
+			}
+			
+			.card-header .fs-4 {
+				font-weight: 600;
+				margin: 0;
+				letter-spacing: 0.5px;
+			}
+			
+			.form-label {
+				font-weight: 500;
+				color: #2c3e50;
+				margin-bottom: 0.5rem;
+			}
+			
+			.form-control {
+				border-radius: 10px;
+				border: 1px solid #e0e0e0;
+				padding: 0.75rem;
+				transition: all 0.3s ease;
+			}
+			
+			.form-control:focus {
+				box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+				border-color: #3498db;
+			}
+			
+			.btn-primary {
+				background: linear-gradient(45deg, #3498db, #2980b9);
+				border: none;
+				border-radius: 10px;
+				padding: 0.75rem;
+				font-weight: 600;
+				letter-spacing: 0.5px;
+				transition: all 0.3s ease;
+			}
+			
+			.btn-primary:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+			}
+			
+			.btn-danger {
+				background: linear-gradient(45deg, #e74c3c, #c0392b);
+				border: none;
+				border-radius: 10px;
+				padding: 0.75rem;
+				font-weight: 600;
+				letter-spacing: 0.5px;
+				transition: all 0.3s ease;
+			}
+			
+			.btn-danger:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+			}
+			
+			.success-message {
+				background: linear-gradient(45deg, #2ecc71, #27ae60);
+				color: white;
+				padding: 1rem;
+				border-radius: 10px;
+				margin-top: 1rem;
+				animation: fadeIn 0.5s ease;
+			}
+			
+			.error-message {
+				background: linear-gradient(45deg, #e74c3c, #c0392b);
+				color: white;
+				padding: 1rem;
+				border-radius: 10px;
+				margin-top: 1rem;
+				animation: fadeIn 0.5s ease;
+			}
+			
+			.status-toggle {
+				background: #f8f9fa;
+				padding: 1rem;
+				border-radius: 10px;
+				border: 1px solid #e0e0e0;
+				margin-bottom: 1.5rem;
+			}
+			
+			.custom-file-upload {
+				border: 2px dashed #3498db;
+				border-radius: 10px;
+				padding: 1.5rem;
+				text-align: center;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				margin-bottom: 1rem;
+			}
+			
+			.custom-file-upload:hover {
+				background: rgba(52, 152, 219, 0.1);
+			}
+			
+			.table {
+				border-radius: 10px;
+				overflow: hidden;
+				border-collapse: separate;
+				border-spacing: 0;
+			}
+			
+			.table thead th {
+				background: #f8f9fa;
+				border: none;
+				padding: 1rem;
+				font-weight: 600;
+				color: #2c3e50;
+			}
+			
+			.table tbody td, .table tbody th {
+				padding: 1rem;
+				border-top: 1px solid #e0e0e0;
+				vertical-align: middle;
+			}
+			
+			.table tbody tr:hover {
+				background: #f8f9fa;
+			}
+			
+			.category-image {
+				width: 50px;
+				height: 50px;
+				border-radius: 10px;
+				object-fit: cover;
+				transition: all 0.3s ease;
+			}
+			
+			.category-image:hover {
+				transform: scale(1.1);
+			}
+			
+			.status-badge {
+				padding: 0.5rem 1rem;
+				border-radius: 20px;
+				font-weight: 500;
+				font-size: 0.875rem;
+			}
+			
+			.status-active {
+				background: rgba(46, 204, 113, 0.1);
+				color: #27ae60;
+			}
+			
+			.status-inactive {
+				background: rgba(231, 76, 60, 0.1);
+				color: #c0392b;
+			}
+			
+			.action-buttons {
+				display: flex;
+				gap: 0.5rem;
+			}
+			
+			.action-buttons .btn {
+				padding: 0.5rem 1rem;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			
+			.pagination {
+				margin: 0;
+				gap: 0.25rem;
+			}
+			
+			.pagination .page-link {
+				border: none;
+				padding: 0.75rem 1rem;
+				border-radius: 10px;
+				color: #2c3e50;
+				transition: all 0.3s ease;
+			}
+			
+			.pagination .page-item.active .page-link {
+				background: #3498db;
+				color: white;
+			}
+			
+			.pagination .page-link:hover {
+				background: #f8f9fa;
+				transform: translateY(-2px);
+			}
+			
+			.stats-info {
+				background: #f8f9fa;
+				padding: 1rem;
+				border-radius: 10px;
+				font-weight: 500;
+				color: #2c3e50;
+			}
+			
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(-10px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+		</style>
+
+		<div class="category-container">
+			<div class="row g-4">
+				<div class="col-md-4">
+					<div class="category-card">
+						<div class="card-header text-center">
+							<h2 class="fs-4">Yeni Kategori Ekle</h2>
+
+							<th:block th:if="${session.succMsg}">
+								<div class="success-message">
+									<i class="fas fa-check-circle me-2"></i>
+									<span>[[${session.succMsg}]]</span>
+								</div>
+								<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+							</th:block>
+
+							<th:block th:if="${session.errorMsg}">
+								<div class="error-message">
+									<i class="fas fa-exclamation-circle me-2"></i>
+									<span>[[${session.errorMsg}]]</span>
+								</div>
+								<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+							</th:block>
+						</div>
+
+						<div class="card-body p-4">
+							<form action="/admin/saveCategory" method="post" enctype="multipart/form-data">
+								<div class="form-group mb-4">
+									<label class="form-label">Kategori Adı</label>
+									<input type="text" name="name" class="form-control" 
+										placeholder="Kategori adını giriniz">
+								</div>
+
+								<div class="form-group">
+									<label class="form-label">Kategori Durumu</label>
+									<div class="status-toggle">
+										<div class="form-check mb-2">
+											<input class="form-check-input" type="radio" checked
+												value="true" name="isActive" id="statusActive">
+											<label class="form-check-label" for="statusActive">
+												<i class="fas fa-check-circle text-success me-2"></i>Aktif
+											</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="isActive"
+												value="false" id="statusInactive">
+											<label class="form-check-label" for="statusInactive">
+												<i class="fas fa-times-circle text-danger me-2"></i>Pasif
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="form-label">Kategori Görseli</label>
+									<div class="custom-file-upload">
+										<input type="file" name="file" class="form-control" 
+											id="fileInput" style="display: none;">
+										<label for="fileInput">
+											<i class="fas fa-cloud-upload-alt fs-3 mb-2"></i>
+											<div>Görsel yüklemek için tıklayınız</div>
+										</label>
+									</div>
+								</div>
+
+								<button class="btn btn-primary w-100">
+									<i class="fas fa-plus-circle me-2"></i>Kategori Ekle
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-8">
+					<div class="category-card">
+						<div class="card-header text-center">
+							<h2 class="fs-4">Kategori Listesi</h2>
+						</div>
+						<div class="card-body p-4">
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Sıra No</th>
+											<th>Kategori Adı</th>
+											<th>Durum</th>
+											<th>Görsel</th>
+											<th>İşlemler</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="cat,c:${categorys}">
+											<th>[[${c.count}]]</th>
+											<td>[[${cat.name}]]</td>
+											<td>
+												<span th:if="${cat.isActive}" class="status-badge status-active">
+													<i class="fas fa-check-circle me-1"></i>Aktif
+												</span>
+												<span th:unless="${cat.isActive}" class="status-badge status-inactive">
+													<i class="fas fa-times-circle me-1"></i>Pasif
+												</span>
+											</td>
+											<td>
+												<img th:src="@{'/img/category_img/'+${cat.imageName}}"
+													class="category-image" alt="Kategori görseli">
+											</td>
+											<td>
+												<div class="action-buttons">
+													<a th:href="@{'/admin/loadEditCategory/'+${cat.id}}"
+														class="btn btn-primary btn-sm">
+														<i class="fas fa-edit"></i>
+														<span>Düzenle</span>
+													</a>
+													<a th:href="@{'/admin/deleteCategory/'+${cat.id}}"
+														class="btn btn-danger btn-sm">
+														<i class="fas fa-trash"></i>
+														<span>Sil</span>
+													</a>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+							<div class="row align-items-center mt-4">
+								<div class="col-md-4">
+									<div class="stats-info">
+										<i class="fas fa-layer-group me-2"></i>
+										Toplam Kategori: [[${totalElements}]]
+									</div>
+								</div>
+								<div class="col-md-8">
+									<nav aria-label="Sayfalama">
+										<ul class="pagination justify-content-end">
+											<li class="page-item" th:classappend="${isFirst} ? 'disabled':''">
+												<a class="page-link" th:href="@{'/admin/category?pageNo='+${pageNo-1}}">
+													<i class="fas fa-chevron-left"></i>
+												</a>
+											</li>
+
+											<li th:each="i:${#numbers.sequence(1,totalPages)}"
+												class="page-item" th:classappend="${pageNo+1==i}?'active':''">
+												<a class="page-link" th:href="@{'/admin/category?pageNo='+${i-1}}">
+													[[${i}]]
+												</a>
+											</li>
+
+											<li class="page-item" th:classappend="${isLast} ? 'disabled':''">
+												<a class="page-link" th:href="@{'/admin/category?pageNo='+${pageNo+1}}">
+													<i class="fas fa-chevron-right"></i>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

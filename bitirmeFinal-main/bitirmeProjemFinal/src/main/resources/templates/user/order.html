@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Sipariş Oluştur</title>
+</head>
+<body>
+	<section>
+		<style>
+			.order-container {
+				background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+				padding: 3rem 1.5rem;
+				min-height: 100vh;
+			}
+			
+			.order-card {
+				background: white;
+				border-radius: 15px;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				padding: 2rem;
+				margin-bottom: 2rem;
+				transition: all 0.3s ease;
+			}
+			
+			.order-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+			}
+			
+			.order-title {
+				font-size: 1.8rem;
+				color: #2c3e50;
+				font-weight: 600;
+				text-align: center;
+				margin-bottom: 2rem;
+				position: relative;
+			}
+			
+			.order-title::after {
+				content: '';
+				position: absolute;
+				bottom: -10px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 50px;
+				height: 3px;
+				background: linear-gradient(to right, #007bff, #0056b3);
+				border-radius: 3px;
+			}
+			
+			.form-group {
+				margin-bottom: 1.5rem;
+			}
+			
+			.form-label {
+				font-weight: 600;
+				color: #2c3e50;
+				margin-bottom: 0.5rem;
+			}
+			
+			.form-control {
+				border: 2px solid #e9ecef;
+				border-radius: 10px;
+				padding: 0.75rem 1rem;
+				transition: all 0.3s ease;
+			}
+			
+			.form-control:focus {
+				border-color: #007bff;
+				box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+			}
+			
+			.price-table {
+				width: 100%;
+			}
+			
+			.price-table td {
+				padding: 1rem;
+				color: #2c3e50;
+			}
+			
+			.price-table .total-row {
+				font-weight: 700;
+				font-size: 1.1rem;
+				background: rgba(0, 123, 255, 0.05);
+				border-radius: 10px;
+			}
+			
+			.payment-select {
+				background-image: linear-gradient(45deg, #f8f9fa 50%, white 50%);
+				background-position: 100%;
+				background-size: 400%;
+				transition: background 0.3s ease;
+			}
+			
+			.payment-select:hover {
+				background-position: 0;
+			}
+			
+			.btn-order {
+				background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+				color: white;
+				border: none;
+				border-radius: 10px;
+				padding: 1rem 2rem;
+				font-weight: 600;
+				transition: all 0.3s ease;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				width: 100%;
+			}
+			
+			.btn-order:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+			}
+			
+			.price-card {
+				background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+				border: none;
+				border-radius: 15px;
+				box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+			}
+			
+			.payment-card {
+				background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+				border: none;
+				border-radius: 15px;
+				box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+			}
+			
+			@media (max-width: 768px) {
+				.order-container {
+					padding: 2rem 1rem;
+				}
+				
+				.order-card {
+					padding: 1.5rem;
+				}
+				
+				.order-title {
+					font-size: 1.5rem;
+				}
+			}
+		</style>
+
+		<div class="order-container">
+			<div class="container">
+				<form action="/user/save-order" method="post" id="orders" novalidate>
+					<div class="row">
+						<!-- Fatura Adresi -->
+						<div class="col-md-6">
+							<div class="order-card">
+								<h2 class="order-title">
+									<i class="fas fa-map-marker-alt me-2"></i>Fatura Adresi
+								</h2>
+								
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">Ad</label>
+											<input type="text" name="firstName" required
+												class="form-control" placeholder="Adınız">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">Soyad</label>
+											<input type="text" name="lastName" required
+												class="form-control" placeholder="Soyadınız">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">Email</label>
+											<input type="email" name="email" required
+												class="form-control" placeholder="ornek@email.com">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="form-label">Telefon</label>
+											<input type="text" name="mobileNo" required
+												class="form-control" placeholder="05XX XXX XX XX">
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="form-label">Adres</label>
+									<input type="text" name="address" required
+										class="form-control" placeholder="Sokak, Mahalle, Bina No">
+								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label class="form-label">Şehir</label>
+											<input type="text" name="city" required
+												class="form-control" placeholder="Şehir">
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label class="form-label">İlçe</label>
+											<input type="text" name="state" required
+												class="form-control" placeholder="İlçe">
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label class="form-label">Posta Kodu</label>
+											<input type="number" name="pincode" required
+												class="form-control" placeholder="XXXXX">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Ödeme Bilgileri -->
+						<div class="col-md-6">
+							<div class="order-card price-card">
+								<h2 class="order-title">
+									<i class="fas fa-shopping-cart me-2"></i>Sipariş Özeti
+								</h2>
+								
+								<table class="price-table">
+									<tbody>
+										<tr>
+											<td>Ürün Toplamı</td>
+											<td class="text-end">&#8378; [[${#numbers.formatDecimal(orderPrice, 1, 'POINT', 2, 'COMMA')}]]</td>
+										</tr>
+										<tr>
+											<td>Kargo Ücreti</td>
+											<td class="text-end">&#8378; [[${#numbers.formatDecimal(250, 1, 'POINT', 2, 'COMMA')}]]</td>
+										</tr>
+										<tr>
+											<td>KDV</td>
+											<td class="text-end">&#8378; [[${#numbers.formatDecimal(100, 1, 'POINT', 2, 'COMMA')}]]</td>
+										</tr>
+										<tr class="total-row">
+											<td>Toplam Tutar</td>
+											<td class="text-end">&#8378; [[${#numbers.formatDecimal(totalOrderPrice, 1, 'POINT', 2, 'COMMA')}]]</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+							<div class="order-card payment-card mt-4">
+								<h2 class="order-title">
+									<i class="fas fa-credit-card me-2"></i>Ödeme Yöntemi
+								</h2>
+								
+								<div class="form-group">
+									<label class="form-label">Ödeme Türünü Seçin</label>
+									<select required name="paymentType" class="form-control payment-select">
+										<option value="">Ödeme yöntemi seçin</option>
+										<option value="COD">Kapıda Ödeme</option>
+										<option value="ONLINE">Online Ödeme</option>
+									</select>
+								</div>
+
+								<button type="submit" class="btn btn-order mt-3">
+									<i class="fas fa-check-circle me-2"></i>Siparişi Tamamla
+								</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

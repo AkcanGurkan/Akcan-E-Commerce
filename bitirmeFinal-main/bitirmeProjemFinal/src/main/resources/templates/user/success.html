@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Akcan</title>
+</head>
+<body>
+	<section>
+		<style>
+			.success-container {
+				min-height: 80vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: linear-gradient(to right, #f8f9fa, #e9ecef);
+				padding: 3rem 0;
+			}
+			
+			.success-card {
+				background: white;
+				border-radius: 20px;
+				border: none;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				padding: 3rem;
+				text-align: center;
+				max-width: 600px;
+				width: 100%;
+				transition: all 0.3s ease;
+			}
+			
+			.success-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+			}
+			
+			.success-icon {
+				font-size: 5rem;
+				color: #28a745;
+				margin-bottom: 2rem;
+				animation: scaleIn 0.5s ease;
+			}
+			
+			.success-title {
+				font-size: 2rem;
+				font-weight: 600;
+				color: #2c3e50;
+				margin-bottom: 1rem;
+			}
+			
+			.success-subtitle {
+				font-size: 1.2rem;
+				color: #6c757d;
+				margin-bottom: 2rem;
+			}
+			
+			.success-buttons {
+				display: flex;
+				gap: 1rem;
+				justify-content: center;
+			}
+			
+			.success-btn {
+				padding: 0.8rem 2rem;
+				font-weight: 600;
+				border-radius: 10px;
+				transition: all 0.3s ease;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			
+			.home-btn {
+				background: linear-gradient(to right, #007bff, #0056b3);
+				border: none;
+				color: white;
+			}
+			
+			.orders-btn {
+				background: linear-gradient(to right, #6c757d, #495057);
+				border: none;
+				color: white;
+			}
+			
+			.success-btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+				color: white;
+			}
+			
+			.delivery-info {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5rem;
+				background: rgba(40, 167, 69, 0.1);
+				color: #28a745;
+				padding: 1rem;
+				border-radius: 10px;
+				margin: 2rem 0;
+			}
+			
+			@keyframes scaleIn {
+				from {
+					transform: scale(0);
+					opacity: 0;
+				}
+				to {
+					transform: scale(1);
+					opacity: 1;
+				}
+			}
+			
+			@media (max-width: 768px) {
+				.success-container {
+					padding: 2rem 1rem;
+				}
+				
+				.success-card {
+					padding: 2rem;
+				}
+				
+				.success-title {
+					font-size: 1.5rem;
+				}
+				
+				.success-subtitle {
+					font-size: 1rem;
+				}
+				
+				.success-buttons {
+					flex-direction: column;
+				}
+				
+				.success-btn {
+					width: 100%;
+					justify-content: center;
+				}
+			}
+		</style>
+
+		<div class="success-container">
+			<div class="success-card">
+				<i class="fas fa-check-circle success-icon"></i>
+				<h2 class="success-title">Siparişiniz Başarıyla Oluşturuldu!</h2>
+				<div class="delivery-info">
+					<i class="fas fa-truck"></i>
+					<span>Ürününüz 7 İş Günü İçinde Teslim Edilecek</span>
+					</div>
+				<div class="success-buttons">
+					<a href="/" class="btn success-btn home-btn">
+						<i class="fas fa-home"></i>
+						Ana Sayfa
+					</a>
+					<a href="/user/user-orders" class="btn success-btn orders-btn">
+						<i class="fas fa-box"></i>
+						Siparişlerim
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

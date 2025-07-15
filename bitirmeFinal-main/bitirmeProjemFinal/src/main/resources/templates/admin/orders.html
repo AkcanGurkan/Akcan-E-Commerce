@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Sipariş Yönetimi | Akcan</title>
+</head>
+<body>
+	<section>
+		<style>
+			.orders-container {
+				background: #f8f9fa;
+				min-height: 100vh;
+				padding: 1.5rem 1rem;
+			}
+			
+			.page-header {
+				background: white;
+				padding: 1rem;
+				border-radius: 8px;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+				margin-bottom: 1.5rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			
+			.page-header h2 {
+				font-size: 1.25rem;
+				margin: 0;
+			}
+			
+			.back-button {
+				color: white;
+				font-size: 1rem;
+				padding: 0.6rem 1.2rem;
+				border-radius: 8px;
+				background: #2196F3;
+				text-decoration: none;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				transition: all 0.3s ease;
+			}
+			
+			.back-button:hover {
+				background: #1976D2;
+				transform: translateY(-2px);
+			}
+			
+			.search-form {
+				background: white;
+				padding: 1rem;
+				border-radius: 8px;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+				margin-bottom: 1rem;
+			}
+			
+			.search-input {
+				border-radius: 8px 0 0 8px !important;
+				border: 1px solid #dee2e6;
+				font-size: 1rem;
+				padding: 0.6rem 1rem;
+			}
+			
+			.search-button {
+				border-radius: 0 8px 8px 0 !important;
+				padding: 0.6rem 1.5rem;
+				font-size: 1rem;
+				background: #4CAF50;
+				border-color: #4CAF50;
+			}
+			
+			.search-button:hover {
+				background: #388E3C;
+				border-color: #388E3C;
+			}
+			
+			.orders-card {
+				background: white;
+				border-radius: 8px;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+			}
+			
+			.table {
+				margin-bottom: 0;
+				font-size: 0.9rem;
+			}
+			
+			.table thead th {
+				background: #f8f9fa;
+				border-bottom: 1px solid #dee2e6;
+				color: #495057;
+				font-weight: 600;
+				font-size: 0.9rem;
+				text-transform: uppercase;
+				padding: 0.5rem;
+				white-space: nowrap;
+			}
+			
+			.table td {
+				padding: 0.5rem;
+				vertical-align: middle;
+			}
+			
+			.customer-info {
+				font-size: 0.85rem;
+				line-height: 1.3;
+			}
+			
+			.customer-info strong {
+				color: #495057;
+				font-size: 0.9rem;
+				display: block;
+				margin-bottom: 0.3rem;
+			}
+			
+			.customer-info p {
+				margin-bottom: 0.2rem;
+			}
+			
+			.customer-info i {
+				color: #6c757d;
+				width: 14px;
+			}
+			
+			.price-info {
+				background: #f8f9fa;
+				padding: 0.4rem 0.6rem;
+				border-radius: 4px;
+				font-size: 0.85rem;
+			}
+			
+			.price-info p {
+				margin-bottom: 0.2rem;
+			}
+			
+			.price-info strong {
+				color: #28a745;
+			}
+			
+			.status-badge {
+				padding: 0.6rem 1.5rem;
+				border-radius: 50px;
+				font-size: 1rem;
+				font-weight: 600;
+				display: inline-block;
+				min-width: 140px;
+				text-align: center;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+			
+			.badge.bg-success {
+				background: linear-gradient(45deg, #2ecc71, #27ae60) !important;
+				box-shadow: 0 2px 5px rgba(46, 204, 113, 0.2);
+			}
+			
+			.badge.bg-danger {
+				background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
+				box-shadow: 0 2px 5px rgba(231, 76, 60, 0.2);
+			}
+			
+			.badge.bg-primary {
+				background: linear-gradient(45deg, #3498db, #2980b9) !important;
+				box-shadow: 0 2px 5px rgba(52, 152, 219, 0.2);
+			}
+			
+			.table td[data-label="Durum"] {
+				min-width: 160px;
+			}
+			
+			.status-form {
+				display: flex;
+				gap: 0.5rem;
+			}
+			
+			.form-select-sm {
+				font-size: 0.9rem;
+				padding: 0.5rem;
+				border-radius: 6px;
+				min-width: 160px;
+			}
+			
+			.btn-update {
+				padding: 0.5rem 1rem;
+				border-radius: 6px;
+				background: #FF5722;
+				border-color: #FF5722;
+				font-size: 0.9rem;
+			}
+			
+			.btn-update:hover {
+				background: #F4511E;
+				border-color: #F4511E;
+			}
+			
+			.btn-update:disabled {
+				background: #ccc;
+				border-color: #ccc;
+			}
+			
+			.pagination {
+				margin: 0;
+			}
+			
+			.page-link {
+				padding: 0.5rem 0.8rem;
+				font-size: 0.9rem;
+				color: #2196F3;
+				border: 1px solid #dee2e6;
+			}
+			
+			.page-link:hover {
+				background: #E3F2FD;
+				color: #1976D2;
+			}
+			
+			.page-item.active .page-link {
+				background: #2196F3;
+				border-color: #2196F3;
+			}
+			
+			.alert {
+				border-radius: 8px;
+				padding: 0.75rem 1rem;
+				margin-bottom: 1rem;
+				font-size: 0.9rem;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			
+			@media (max-width: 768px) {
+				.orders-container {
+					padding: 1rem 0.5rem;
+				}
+				
+				.table thead {
+					display: none;
+				}
+				
+				.table, .table tbody, .table tr, .table td {
+					display: block;
+					width: 100%;
+				}
+				
+				.table tr {
+					margin-bottom: 1rem;
+					border: 1px solid #dee2e6;
+					border-radius: 4px;
+				}
+				
+				.table td {
+					text-align: left;
+					padding: 0.5rem;
+					border: none;
+					border-bottom: 1px solid #dee2e6;
+			}
+			
+				.table td:last-child {
+					border-bottom: none;
+			}
+			
+				.table td::before {
+					content: attr(data-label);
+					font-weight: bold;
+					display: block;
+					margin-bottom: 0.3rem;
+			}
+			
+				.status-form {
+					flex-direction: row;
+			}
+			
+				.form-select-sm, .btn-update {
+					width: auto;
+			}
+			
+				.search-input, .search-button {
+					padding: 0.8rem 1rem;
+				}
+				
+				.btn-update {
+					padding: 0.8rem 1.2rem;
+				}
+			}
+		</style>
+
+		<div class="orders-container">
+			<div class="container-fluid">
+				<div class="page-header">
+					<h2>Sipariş Yönetimi</h2>
+					<a href="/admin/" class="back-button">
+						<i class="fa-solid fa-arrow-left"></i>
+						<span>Geri</span>
+					</a>
+				</div>
+
+				<!-- Mesaj Bildirimleri -->
+				<th:block th:if="${session.succMsg}">
+					<div class="alert alert-success">
+						<i class="fas fa-check-circle"></i>
+						<span>[[${session.succMsg}]]</span>
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+						</div>
+				</th:block>
+
+				<th:block th:if="${session.errorMsg}">
+					<div class="alert alert-danger">
+						<i class="fas fa-exclamation-circle"></i>
+						<span>[[${session.errorMsg}]]</span>
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+						</div>
+				</th:block>
+
+				<!-- Arama Formu -->
+				<div class="search-form">
+					<form action="/admin/search-order" method="get" class="d-flex">
+						<input type="text" class="form-control search-input" name="orderId" 
+							placeholder="Sipariş numarası giriniz">
+						<button class="btn btn-primary search-button">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+				</div>
+
+				<!-- Siparişler Tablosu -->
+				<div class="orders-card">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+									<th>Sipariş No</th>
+									<th>Müşteri Bilgileri</th>
+									<th>Tarih</th>
+										<th>Ürün</th>
+									<th>Fiyat</th>
+									<th>Durum</th>
+									<th>İşlem</th>
+									</tr>
+								</thead>
+								<tbody>
+								<!-- Arama Sonuçları -->
+								<th:block th:if="${srch}">
+									<th:block th:if="${orderDtls != null}">
+										<tr>
+											<td data-label="Sipariş No">[[${orderDtls.orderId}]]</td>
+											<td data-label="Müşteri Bilgileri">
+												<div class="customer-info">
+													<strong>[[${orderDtls.orderAddress.firstName + ' ' + orderDtls.orderAddress.lastName}]]</strong>
+													<p><i class="fas fa-envelope"></i>[[${orderDtls.orderAddress.email}]]</p>
+													<p><i class="fas fa-phone"></i>[[${orderDtls.orderAddress.mobileNo}]]</p>
+													<p><i class="fas fa-map-marker-alt"></i>[[${orderDtls.orderAddress.address}]]</p>
+													<p>[[${orderDtls.orderAddress.city}]] / [[${orderDtls.orderAddress.state}]]</p>
+													<small class="text-muted">[[${orderDtls.orderAddress.pincode}]]</small>
+												</div>
+											</td>
+											<td data-label="Tarih">[[${#temporals.format(orderDtls.orderDate, 'dd/MM/yyyy HH:mm')}]]</td>
+											<td data-label="Ürün">[[${orderDtls.product.title}]]</td>
+											<td data-label="Fiyat">
+												<div class="price-info">
+													<p>[[${orderDtls.quantity}]] adet</p>
+													<p>₺[[${orderDtls.price}]] / adet</p>
+													<strong>₺[[${orderDtls.quantity * orderDtls.price}]]</strong>
+												</div>
+											</td>
+											<td data-label="Durum">
+												<span th:class="${
+													orderDtls.status == 'Delivered' ? 'badge bg-success' :
+													orderDtls.status == 'Cancelled' ? 'badge bg-danger' :
+													'badge bg-primary'
+												}">[[${orderDtls.status}]]</span>
+											</td>
+											<td data-label="İşlem">
+												<form action="/admin/update-order-status" method="post" class="status-form">
+													<input type="hidden" name="id" th:value="${orderDtls.id}">
+													<select class="form-select form-select-sm" name="st" 
+														th:disabled="${orderDtls.status == 'Cancelled' || orderDtls.status == 'Delivered'}">
+														<option value="">Durum Seçin</option>
+														<option value="1">Devam Ediyor</option>
+														<option value="2">Sipariş Alındı</option>
+														<option value="3">Paketlendi</option>
+														<option value="4">Teslimatta</option>
+														<option value="5">Teslim Edildi</option>
+														<option value="6">İptal Edildi</option>
+													</select>
+													<button class="btn btn-primary btn-update" 
+														th:disabled="${orderDtls.status == 'Cancelled' || orderDtls.status == 'Delivered'}">
+														<i class="fas fa-sync-alt"></i> Güncelle
+													</button>
+												</form>
+											</td>
+										</tr>
+									</th:block>
+									<tr th:unless="${orderDtls != null}">
+										<td colspan="7" class="text-center text-danger py-3">
+											<i class="fas fa-exclamation-triangle me-2"></i>
+											[[${errorMsg}]]
+										</td>
+									</tr>
+								</th:block>
+
+								<!-- Tüm Siparişler -->
+								<th:block th:unless="${srch}">
+									<tr th:each="o : ${orders}">
+										<td data-label="Sipariş No">[[${o.orderId}]]</td>
+										<td data-label="Müşteri Bilgileri">
+											<div class="customer-info">
+												<strong>[[${o.orderAddress.firstName + ' ' + o.orderAddress.lastName}]]</strong>
+												<p><i class="fas fa-envelope"></i>[[${o.orderAddress.email}]]</p>
+												<p><i class="fas fa-phone"></i>[[${o.orderAddress.mobileNo}]]</p>
+												<p><i class="fas fa-map-marker-alt"></i>[[${o.orderAddress.address}]]</p>
+												<p>[[${o.orderAddress.city}]] / [[${o.orderAddress.state}]]</p>
+												<small class="text-muted">[[${o.orderAddress.pincode}]]</small>
+						</div>
+										</td>
+										<td data-label="Tarih">[[${#temporals.format(o.orderDate, 'dd/MM/yyyy HH:mm')}]]</td>
+										<td data-label="Ürün">[[${o.product.title}]]</td>
+										<td data-label="Fiyat">
+											<div class="price-info">
+												<p>[[${o.quantity}]] adet</p>
+												<p>₺[[${o.price}]] / adet</p>
+												<strong>₺[[${o.quantity * o.price}]]</strong>
+					</div>
+										</td>
+										<td data-label="Durum">
+											<span th:class="${
+												o.status == 'Delivered' ? 'badge bg-success' :
+												o.status == 'Cancelled' ? 'badge bg-danger' :
+												'badge bg-primary'
+											}">[[${o.status}]]</span>
+										</td>
+										<td data-label="İşlem">
+						<form action="/admin/update-order-status" method="post" class="status-form">
+												<input type="hidden" name="id" th:value="${o.id}">
+												<select class="form-select form-select-sm" name="st"
+													th:disabled="${o.status == 'Cancelled' || o.status == 'Delivered'}">
+								<option value="">Durum Seçin</option>
+													<option value="1">Devam Ediyor</option>
+													<option value="2">Sipariş Alındı</option>
+													<option value="3">Paketlendi</option>
+													<option value="4">Teslimatta</option>
+													<option value="5">Teslim Edildi</option>
+													<option value="6">İptal Edildi</option>
+							</select>
+												<button class="btn btn-primary btn-update"
+													th:disabled="${o.status == 'Cancelled' || o.status == 'Delivered'}">
+													<i class="fas fa-sync-alt"></i> Güncelle
+							</button>
+						</form>
+										</td>
+									</tr>
+								</th:block>
+							</tbody>
+						</table>
+					</div>
+
+					<!-- Pagination -->
+					<th:block th:if="${!srch}">
+						<div class="d-flex justify-content-between align-items-center p-2 border-top">
+							<small class="text-muted">Toplam: [[${totalElements}]]</small>
+							<nav>
+								<ul class="pagination">
+									<li class="page-item" th:classappend="${isFirst} ? 'disabled':''">
+										<a class="page-link" th:href="@{'/admin/orders?pageNo='+${pageNo-1}}">
+											<i class="fas fa-chevron-left"></i>
+										</a>
+									</li>
+									<li th:each="i : ${#numbers.sequence(1,totalPages)}" 
+										class="page-item" th:classappend="${pageNo+1==i}?'active':''">
+										<a class="page-link" th:href="@{'/admin/orders?pageNo='+${i-1}}">[[${i}]]</a>
+									</li>
+									<li class="page-item" th:classappend="${isLast} ? 'disabled':''">
+										<a class="page-link" th:href="@{'/admin/orders?pageNo='+${pageNo+1}}">
+											<i class="fas fa-chevron-right"></i>
+										</a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

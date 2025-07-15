@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Ürün Detayları</title>
+</head>
+<body>
+	<section>
+		<style>
+			:root {
+				--primary-color: #3498db;
+				--primary-dark: #2980b9;
+				--secondary-color: #2c3e50;
+				--accent-color: #e74c3c;
+				--background-color: #f8f9fa;
+			}
+			
+			.product-detail {
+				padding: 5rem 0;
+				background: linear-gradient(to right, var(--background-color), #e9ecef);
+				min-height: 80vh;
+			}
+			.product-card {
+				background: white;
+				border-radius: 20px;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				overflow: hidden;
+				padding: 2rem;
+			}
+			.product-image {
+				position: relative;
+				overflow: hidden;
+				border-radius: 15px;
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+				max-height: 500px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: #f8f9fa;
+			}
+			.product-image img {
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+				max-height: 500px;
+				transition: transform 0.3s ease;
+			}
+			.product-image:hover img {
+				transform: scale(1.05);
+			}
+			.product-title {
+				font-size: 2rem;
+				font-weight: 600;
+				color: #2c3e50;
+				margin-bottom: 1rem;
+			}
+			.product-description {
+				color: #666;
+				font-size: 1.1rem;
+				line-height: 1.6;
+				margin-bottom: 1.5rem;
+			}
+			.product-meta {
+				background: #f8f9fa;
+				padding: 1.5rem;
+				border-radius: 15px;
+				margin-bottom: 1.5rem;
+			}
+			.product-meta p {
+				margin-bottom: 0.5rem;
+				color: #666;
+			}
+			.product-meta .badge {
+				padding: 0.5rem 1rem;
+				font-size: 0.9rem;
+				border-radius: 10px;
+			}
+			.product-price {
+				margin: 2rem 0;
+				padding: 1rem;
+				border-radius: 15px;
+				background: rgba(52, 152, 219, 0.1);
+			}
+			.discounted-price {
+				font-size: 2.2rem;
+				font-weight: 700;
+				color: var(--primary-color);
+				display: inline-block;
+				margin-right: 1rem;
+			}
+			.original-price {
+				font-size: 1.4rem;
+				color: #999;
+				text-decoration: line-through;
+				margin-right: 1rem;
+			}
+			.discount-badge {
+				background: var(--primary-color);
+				color: white;
+				padding: 0.5rem 1rem;
+				border-radius: 10px;
+				font-size: 0.9rem;
+			}
+			.features-section {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1rem;
+				margin: 2rem 0;
+				margin-top: 3rem;
+			}
+			.feature-item {
+				background: #f8f9fa;
+				padding: 1rem;
+				border-radius: 10px;
+				text-align: center;
+				transition: all 0.3s ease;
+				border: 1px solid #e9ecef;
+			}
+			.feature-item:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+			}
+			.feature-item i {
+				font-size: 1.8rem;
+				margin-bottom: 0.5rem;
+			}
+			.feature-item p {
+				margin: 0;
+				color: #666;
+				font-size: 0.9rem;
+				font-weight: 500;
+			}
+			.add-to-cart-btn {
+				width: 100%;
+				padding: 1rem;
+				font-size: 1.1rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				border-radius: 10px;
+				transition: all 0.3s ease;
+				background: var(--primary-color);
+				border-color: var(--primary-color);
+				color: white;
+			}
+			.add-to-cart-btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+			}
+			.alert {
+				border-radius: 10px;
+				padding: 1rem;
+				margin-bottom: 2rem;
+				border: none;
+			}
+			@media (max-width: 1200px) {
+				.product-image, .product-image img {
+					max-height: 400px;
+				}
+			}
+			@media (max-width: 992px) {
+				.product-image, .product-image img {
+					max-height: 350px;
+				}
+			}
+			@media (max-width: 768px) {
+				.product-image, .product-image img {
+					max-height: 300px;
+				}
+				.features-section {
+					grid-template-columns: 1fr;
+				}
+				.product-title {
+					font-size: 1.5rem;
+				}
+				.discounted-price, .original-price, .discount-badge {
+					font-size: 1.5rem;
+				}
+			}
+			@media (max-width: 576px) {
+				.product-image, .product-image img {
+					max-height: 250px;
+				}
+			}
+		</style>
+
+		<div class="product-detail">
+			<div class="container">
+				<div class="product-card">
+					<!-- Alerts -->
+					<th:block th:if="${session.succMsg}">
+						<div class="alert alert-success" role="alert">
+							<i class="fas fa-check-circle me-2"></i>
+							[[${session.succMsg}]]
+						</div>
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</th:block>
+
+					<th:block th:if="${session.errorMsg}">
+						<div class="alert alert-danger" role="alert">
+							<i class="fas fa-exclamation-circle me-2"></i>
+							[[${session.errorMsg}]]
+						</div>
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</th:block>
+
+					<div class="row">
+						<!-- Product Image -->
+						<div class="col-md-6 mb-4">
+							<div class="product-image">
+								<img th:src="@{'/images/product_img/'+${product.image}}" 
+									 alt="Ürün Görseli" class="img-fluid">
+							</div>
+					</div>
+
+						<!-- Product Info -->
+					<div class="col-md-6">
+							<h1 class="product-title">[[${product.title}]]</h1>
+							
+							<div class="product-description">
+								<h5 class="mb-2">Ürün Açıklaması</h5>
+								<p>[[${product.description}]]</p>
+							</div>
+
+							<div class="product-meta">
+								<h5 class="mb-3">Ürün Detayları</h5>
+								<p>
+									<strong>Stok Durumu:</strong>
+							<th:block th:if="${product.stock>0}">
+										<span class="badge bg-success">Stokta Mevcut</span>
+							</th:block>
+							<th:block th:unless="${product.stock>0}">
+								<span class="badge bg-warning">Stokta Yok</span>
+							</th:block>
+								</p>
+								<p><strong>Kategori:</strong> [[${product.category}]]</p>
+								<p><strong>İade Politikası:</strong> 7 İş Günü İçinde Değişim Ya Da İade</p>
+							</div>
+
+							<div class="product-price">
+								<span class="discounted-price">₺[[${#numbers.formatDecimal(product.discountPrice, 1, 'POINT', 2, 'COMMA')}]]</span>
+								<span class="original-price">₺[[${#numbers.formatDecimal(product.price, 1, 'POINT', 2, 'COMMA')}]]</span>
+								<span class="discount-badge">-[[${product.discount}]]%</span>
+							</div>
+
+							<div class="features-section">
+								<div class="feature-item">
+									<i class="fas fa-money-bill-wave text-success"></i>
+									<p>Kapıda Ödeme</p>
+								</div>
+								<div class="feature-item">
+									<i class="fas fa-undo-alt text-danger"></i>
+									<p>İade Mevcut</p>
+								</div>
+								<div class="feature-item">
+									<i class="fas fa-truck-moving text-primary"></i>
+								<p>Ücretsiz Kargo</p>
+							</div>
+						</div>
+
+						<th:block th:if="${product.stock>0}">
+							<th:block th:if="${user==null}">
+									<a href="/signin" class="btn add-to-cart-btn">
+										<i class="fas fa-shopping-cart me-2"></i>
+										Giriş Yap ve Sepete Ekle
+									</a>
+							</th:block>
+
+							<th:block th:unless="${user==null}">
+									<a th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}"
+									   class="btn add-to-cart-btn">
+										<i class="fas fa-shopping-cart me-2"></i>
+										Sepete Ekle
+									</a>
+							</th:block>
+						</th:block>
+
+						<th:block th:unless="${product.stock>0}">
+								<button class="btn btn-warning add-to-cart-btn" disabled>
+									<i class="fas fa-exclamation-circle me-2"></i>
+									Stokta Yok
+								</button>
+						</th:block>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

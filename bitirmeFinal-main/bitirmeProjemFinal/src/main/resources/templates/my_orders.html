@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Siparişlerim | Akcan</title>
+</head>
+<body>
+	<section>
+		<style>
+			.orders-container {
+				background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+				padding: 2rem;
+				border-radius: 15px;
+				box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+			}
+			
+			.page-title {
+				color: #2c3e50;
+				font-size: 2rem;
+				font-weight: 600;
+				text-align: center;
+				margin-bottom: 2rem;
+				position: relative;
+				padding-bottom: 1rem;
+			}
+			
+			.page-title:after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 100px;
+				height: 3px;
+				background: linear-gradient(90deg, #3498db, #2980b9);
+				border-radius: 3px;
+			}
+			
+			.alert {
+				border: none;
+				border-radius: 10px;
+				padding: 1rem;
+				margin-bottom: 1.5rem;
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+			
+			.alert-success {
+				background: rgba(46, 204, 113, 0.1);
+				color: #27ae60;
+			}
+			
+			.alert-danger {
+				background: rgba(231, 76, 60, 0.1);
+				color: #c0392b;
+			}
+			
+			.order-card {
+				background: white;
+				border-radius: 15px;
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+				margin-bottom: 1.5rem;
+				overflow: hidden;
+				transition: all 0.3s ease;
+			}
+			
+			.order-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+			}
+			
+			.order-header {
+				background: #f8f9fa;
+				padding: 1rem 1.5rem;
+				border-bottom: 1px solid #e9ecef;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			
+			.order-id {
+				font-weight: 600;
+				color: #2c3e50;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			
+			.order-date {
+				color: #6c757d;
+				font-size: 0.9rem;
+			}
+			
+			.order-body {
+				padding: 1.5rem;
+			}
+			
+			.product-info {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 1.5rem;
+				margin-bottom: 1rem;
+			}
+			
+			.info-group {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+			
+			.info-label {
+				color: #6c757d;
+				font-size: 0.9rem;
+			}
+			
+			.info-value {
+				color: #2c3e50;
+				font-weight: 500;
+			}
+			
+			.price-details {
+				background: #f8f9fa;
+				padding: 1rem;
+				border-radius: 10px;
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1rem;
+				text-align: center;
+			}
+			
+			.price-item {
+				padding: 0.5rem;
+			}
+			
+			.price-label {
+				color: #6c757d;
+				font-size: 0.9rem;
+				margin-bottom: 0.3rem;
+			}
+			
+			.price-value {
+				color: #2c3e50;
+				font-weight: 600;
+			}
+			
+			.status-badge {
+				padding: 0.5rem 1rem;
+				border-radius: 50px;
+				font-size: 0.85rem;
+				font-weight: 600;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			
+			.status-processing {
+				background: rgba(255, 193, 7, 0.15);
+				color: #ffc107;
+			}
+			
+			.status-confirmed {
+				background: rgba(52, 152, 219, 0.15);
+				color: #3498db;
+			}
+			
+			.status-packed {
+				background: rgba(108, 117, 125, 0.15);
+				color: #6c757d;
+			}
+			
+			.status-shipped {
+				background: rgba(255, 145, 0, 0.15);
+				color: #ff9100;
+			}
+			
+			.status-delivered {
+				background: rgba(40, 167, 69, 0.15);
+				color: #28a745;
+			}
+			
+			.status-cancelled {
+				background: rgba(220, 53, 69, 0.15);
+				color: #dc3545;
+			}
+			
+			.order-actions {
+				margin-top: 1rem;
+				display: flex;
+				justify-content: flex-end;
+				gap: 1rem;
+			}
+			
+			.btn-cancel {
+				background: #dc3545;
+				color: white;
+				border: none;
+				padding: 0.5rem 1.5rem;
+				border-radius: 50px;
+				font-weight: 500;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				transition: all 0.3s ease;
+			}
+			
+			.btn-cancel:hover {
+				background: #c82333;
+				transform: translateY(-2px);
+			}
+			
+			.btn-cancel.disabled {
+				background: #e9ecef;
+				color: #6c757d;
+				cursor: not-allowed;
+			}
+			
+			@media (max-width: 768px) {
+				.orders-container {
+					padding: 1rem;
+				}
+				
+				.product-info {
+					grid-template-columns: 1fr;
+				}
+				
+				.price-details {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+
+		<div class="container mt-4">
+			<div class="orders-container">
+				<h1 class="page-title">
+					<i class="fas fa-shopping-bag me-2"></i>Siparişlerim
+				</h1>
+
+				<th:block th:if="${session.succMsg}">
+					<div class="alert alert-success">
+						<i class="fas fa-check-circle"></i>
+						<span>[[${session.succMsg}]]</span>
+					</div>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+
+				<th:block th:if="${session.errorMsg}">
+					<div class="alert alert-danger">
+						<i class="fas fa-exclamation-circle"></i>
+						<span>[[${session.errorMsg}]]</span>
+					</div>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+
+				<div th:each="o : ${orders}" class="order-card">
+					<div class="order-header">
+						<div class="order-id">
+							<i class="fas fa-hashtag"></i>
+							<span>[[${o.orderId}]]</span>
+						</div>
+						<div class="order-date">
+							<i class="fas fa-calendar-alt me-1"></i>
+							<span th:text="${#temporals.format(o.orderDate, 'dd/MM/yyyy HH:mm')}"></span>
+						</div>
+					</div>
+
+					<div class="order-body">
+						<div class="product-info">
+							<div class="info-group">
+								<span class="info-label">Ürün Adı</span>
+								<span class="info-value">[[${o.product.title}]]</span>
+							</div>
+							<div class="info-group">
+								<span class="info-label">Durum</span>
+								<span th:class="'status-badge status-' + ${#strings.toLowerCase(o.status)}">
+									<i class="fas" th:classappend="${
+										o.status == 'PROCESSING' ? 'fa-spinner fa-spin' :
+										o.status == 'CONFIRMED' ? 'fa-check-circle' :
+										o.status == 'PACKED' ? 'fa-box' :
+										o.status == 'SHIPPED' ? 'fa-shipping-fast' :
+										o.status == 'DELIVERED' ? 'fa-check-double' :
+										'fa-times-circle'
+									}"></i>
+									<span>[[${o.status}]]</span>
+								</span>
+							</div>
+						</div>
+
+						<div class="price-details">
+							<div class="price-item">
+								<div class="price-label">Adet</div>
+								<div class="price-value">[[${o.quantity}]]</div>
+							</div>
+							<div class="price-item">
+								<div class="price-label">Birim Fiyat</div>
+								<div class="price-value">₺[[${#numbers.formatDecimal(o.price, 1, 'POINT', 2, 'COMMA')}]]</div>
+							</div>
+							<div class="price-item">
+								<div class="price-label">Toplam</div>
+								<div class="price-value">₺[[${#numbers.formatDecimal(o.quantity * o.price, 1, 'POINT', 2, 'COMMA')}]]</div>
+							</div>
+						</div>
+
+						<div class="order-actions">
+							<th:block th:if="${o.status != 'Cancelled'}">
+								<a th:href="@{'/user/update-status?id='+${o.id}+'&st=6'}"
+									class="btn-cancel">
+									<i class="fas fa-times-circle"></i>
+									<span>İptal Et</span>
+								</a>
+							</th:block>
+							<th:block th:unless="${o.status != 'Cancelled'}">
+								<button class="btn-cancel disabled">
+									<i class="fas fa-times-circle"></i>
+									<span>İptal Edildi</span>
+								</button>
+							</th:block>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html> 

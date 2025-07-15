@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sipariş Onayı</title>
+    <style>
+        /* Reset CSS */
+        body, table, td, p, a {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 0;
+        }
+        
+        .header img {
+            max-width: 180px;
+            height: auto;
+            filter: brightness(0) invert(1);
+        }
+        
+        /* Content */
+        .content {
+            padding: 40px;
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .greeting {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+        
+        .message {
+            margin-bottom: 35px;
+            color: #505c6e;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        /* Order Details */
+        .order-details {
+            background-color: #f8fafc;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 35px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .order-number {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        
+        .order-table th {
+            background-color: #f1f5f9;
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid #e9ecef;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .order-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #505c6e;
+        }
+        
+        .total-row {
+            font-weight: 600;
+            background-color: #f8fafc;
+            color: #2c3e50;
+        }
+        
+        /* Button */
+        .button {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 25px 0;
+            text-align: center;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Shipping Address */
+        .shipping-address {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            margin-top: 20px;
+        }
+        
+        .shipping-address strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #64748b;
+            font-size: 13px;
+            border-top: 1px solid #e9ecef;
+            margin-top: 30px;
+        }
+        
+        .social-links {
+            margin: 25px 0;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin: 0 12px;
+            color: #3498db;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-2px);
+        }
+        
+        .social-links i {
+            font-size: 24px;
+        }
+        
+        /* Responsive */
+        @media screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+                padding: 10px !important;
+            }
+            
+            .content {
+                padding: 25px !important;
+            }
+            
+            .order-table {
+                font-size: 13px !important;
+            }
+            
+            .greeting {
+                font-size: 24px !important;
+            }
+            
+            .button {
+                display: block;
+                text-align: center;
+                margin: 20px auto;
+            }
+            
+            .order-details {
+                padding: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <img src="cid:logo" alt="Akcan Logo">
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                Merhaba [[${customerName}]],
+            </div>
+            
+            <div class="message">
+                Siparişiniz başarıyla alınmıştır. Siparişinizin detayları aşağıda yer almaktadır.
+            </div>
+            
+            <div class="order-details">
+                <div class="order-number">
+                    Sipariş Numarası: #[[${orderId}]]
+                </div>
+                
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Adet</th>
+                            <th>Fiyat</th>
+                            <th>Toplam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${orderItems}">
+                            <td>[[${item.productName}]]</td>
+                            <td>[[${item.quantity}]]</td>
+                            <td>₺[[${#numbers.formatDecimal(item.price, 1, 'POINT', 2, 'COMMA')}]]</td>
+                            <td>₺[[${#numbers.formatDecimal(item.total, 1, 'POINT', 2, 'COMMA')}]]</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="3">Ara Toplam</td>
+                            <td>₺[[${#numbers.formatDecimal(subtotal, 1, 'POINT', 2, 'COMMA')}]]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Kargo</td>
+                            <td>₺250,00</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="3">Genel Toplam</td>
+                            <td>₺[[${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')}]]</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="shipping-address">
+                    <strong>Teslimat Adresi:</strong><br>
+                    [[${shippingAddress}]]<br>
+                    [[${city}]] / [[${state}]]<br>
+                    [[${pincode}]]
+                </div>
+            </div>
+            
+            <a href="/my-orders" class="button">Siparişlerimi Görüntüle</a>
+            
+            <div class="message">
+                Siparişiniz için teşekkür ederiz.
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+            
+            <p>© 2024 Akcan. Tüm hakları saklıdır.</p>
+            <p>Bu e-posta [[${customerEmail}]] adresine gönderilmiştir.</p>
+        </div>
+    </div>
+</body>
+</html> 

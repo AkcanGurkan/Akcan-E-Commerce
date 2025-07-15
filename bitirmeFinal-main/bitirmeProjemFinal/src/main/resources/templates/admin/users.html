@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Kullanıcı Yönetimi | Akcan</title>
+</head>
+<body>
+	<section>
+		<style>
+			.users-container {
+				min-height: 100vh;
+				background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+				padding: 2rem 1.5rem;
+			}
+			
+			.users-card {
+				background: white;
+				border-radius: 15px;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				overflow: hidden;
+				animation: fadeIn 0.5s ease;
+			}
+			
+			.users-header {
+				background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+				color: white;
+				padding: 1.5rem;
+				text-align: center;
+			}
+			
+			.users-title {
+				font-size: 1.8rem;
+				font-weight: 600;
+				margin: 0;
+			}
+			
+			.alert {
+				border-radius: 10px;
+				padding: 1rem;
+				margin: 1rem 0;
+				animation: slideIn 0.5s ease;
+			}
+			
+			.users-table {
+				margin: 0;
+			}
+			
+			.users-table th {
+				background: #f8f9fa;
+				border-bottom: 2px solid #dee2e6;
+				font-weight: 600;
+				text-transform: uppercase;
+				font-size: 0.85rem;
+				padding: 1rem;
+				white-space: nowrap;
+			}
+			
+			.users-table td {
+				vertical-align: middle;
+				padding: 0.8rem;
+				font-size: 0.9rem;
+			}
+			
+			.profile-img {
+				width: 50px;
+				height: 50px;
+				object-fit: cover;
+				border-radius: 50%;
+				border: 2px solid #e9ecef;
+				transition: transform 0.3s ease;
+			}
+			
+			.profile-img:hover {
+				transform: scale(1.1);
+				border-color: #3498db;
+			}
+			
+			.user-name {
+				font-weight: 600;
+				color: #2c3e50;
+				margin: 0;
+			}
+			
+			.user-email {
+				color: #6c757d;
+			}
+			
+			.user-mobile {
+				color: #2c3e50;
+			}
+			
+			.user-address {
+				max-width: 200px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				color: #6c757d;
+			}
+			
+			.status-badge {
+				padding: 0.4rem 0.8rem;
+				border-radius: 50px;
+				font-size: 0.8rem;
+				font-weight: 600;
+				text-transform: uppercase;
+			}
+			
+			.status-active {
+				background: rgba(40, 167, 69, 0.1);
+				color: #28a745;
+			}
+			
+			.status-inactive {
+				background: rgba(220, 53, 69, 0.1);
+				color: #dc3545;
+			}
+			
+			.action-buttons {
+				display: flex;
+				gap: 0.5rem;
+				justify-content: flex-end;
+			}
+			
+			.btn-action {
+				padding: 0.4rem 1rem;
+				border-radius: 50px;
+				font-size: 0.8rem;
+				font-weight: 600;
+				transition: all 0.3s ease;
+			}
+			
+			.btn-activate {
+				background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+				color: white;
+				border: none;
+			}
+			
+			.btn-activate:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+				color: white;
+			}
+			
+			.btn-deactivate {
+				background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+				color: white;
+				border: none;
+			}
+			
+			.btn-deactivate:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+				color: white;
+			}
+			
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			
+			@keyframes slideIn {
+				from {
+					opacity: 0;
+					transform: translateX(-20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+			
+			@media (max-width: 992px) {
+				.users-table {
+					display: block;
+					overflow-x: auto;
+					white-space: nowrap;
+				}
+				
+				.users-title {
+					font-size: 1.5rem;
+				}
+				
+				.action-buttons {
+					flex-direction: column;
+					gap: 0.3rem;
+				}
+				
+				.btn-action {
+					width: 100%;
+				}
+			}
+		</style>
+
+		<div class="users-container">
+			<div class="users-card">
+				<div class="users-header">
+					<h2 class="users-title" th:if="${userType==1}">Kullanıcı Yönetimi</h2>
+					<h2 class="users-title" th:if="${userType==2}">Admin Yönetimi</h2>
+				</div>
+				
+				<div class="card-body">
+					<!-- Success Message -->
+					<div th:if="${session.succMsg}" class="alert alert-success" role="alert">
+						<i class="fas fa-check-circle me-2"></i>
+						[[${session.succMsg}]]
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</div>
+					
+					<!-- Error Message -->
+					<div th:if="${session.errorMsg}" class="alert alert-danger" role="alert">
+						<i class="fas fa-exclamation-circle me-2"></i>
+						[[${session.errorMsg}]]
+						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+					</div>
+					
+					<div class="table-responsive">
+						<table class="table users-table">
+							<thead>
+								<tr>
+									<th>Sıra No</th>
+									<th>Profil</th>
+									<th>Ad</th>
+									<th>İletişim Bilgileri</th>
+									<th>Adres</th>
+									<th>Durum</th>
+									<th>İşlemler</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="u,c:${users}">
+									<td>[[${c.count}]]</td>
+									<td>
+										<img th:src="@{/static/img/profile_img/{image}(image=${u.profileImage})}"
+											class="profile-img" th:alt="${u.name}">
+									</td>
+									<td>
+										<h6 class="user-name">[[${u.name}]]</h6>
+									</td>
+									<td>
+										<div class="user-email">
+											<i class="fas fa-envelope me-1"></i>[[${u.email}]]
+										</div>
+										<div class="user-mobile">
+											<i class="fas fa-phone me-1"></i>[[${u.mobileNumber}]]
+										</div>
+									</td>
+									<td>
+										<div class="user-address" th:title="${u.address+', '+u.city+', '+u.state+', '+u.pincode}">
+											<i class="fas fa-map-marker-alt me-1"></i>
+											[[${u.address+', '+u.city+', '+u.state+', '+u.pincode}]]
+										</div>
+									</td>
+									<td>
+										<span class="status-badge" 
+											th:classappend="${u.isEnable ? 'status-active' : 'status-inactive'}">
+											[[${u.isEnable ? 'Aktif' : 'Pasif'}]]
+										</span>
+									</td>
+									<td>
+										<div class="action-buttons">
+											<a th:href="@{'/admin/updateSts?status=true&id='+${u.id}}+'&type='+${userType}"
+												class="btn btn-action btn-activate">
+												<i class="fas fa-check-circle me-1"></i>Aktifleştir
+											</a>
+											<a th:href="@{'/admin/updateSts?status=false&id='+${u.id}}+'&type='+${userType}"
+												class="btn btn-action btn-deactivate">
+												<i class="fas fa-times-circle me-1"></i>Pasifleştir
+											</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

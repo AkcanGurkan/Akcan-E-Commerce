@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Kayıt Ol</title>
+</head>
+<body>
+	<section>
+		<style>
+			:root {
+				--primary-color: #3498db;
+				--primary-dark: #2980b9;
+				--secondary-color: #2c3e50;
+				--accent-color: #e74c3c;
+				--background-color: #f8f9fa;
+			}
+			
+			.register-container {
+				min-height: 100vh;
+				background: linear-gradient(to right, var(--background-color), #e9ecef);
+				padding: 6rem 0;
+			}
+			body {
+				background: linear-gradient(to right, var(--background-color), #e9ecef);
+				margin: 0;
+				padding: 0;
+			}
+			.register-card {
+				background: white;
+				border: none;
+				border-radius: 20px;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				overflow: hidden;
+				transition: all 0.3s ease;
+			}
+			.register-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+			}
+			.register-header {
+				background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+				padding: 2rem;
+				text-align: center;
+				color: white;
+				border-radius: 20px 20px 0 0;
+			}
+			.register-title {
+				font-size: 2rem;
+				font-weight: 600;
+				margin-bottom: 0.5rem;
+			}
+			.register-subtitle {
+				color: rgba(255, 255, 255, 0.9);
+				font-size: 1rem;
+			}
+			.register-body {
+				padding: 2rem;
+			}
+			.form-group {
+				margin-bottom: 1.5rem;
+				position: relative;
+			}
+			.form-control {
+				border-radius: 10px;
+				padding: 0.8rem 1rem;
+				padding-left: 2.5rem;
+				border: 2px solid #e9ecef;
+				transition: all 0.3s ease;
+				font-size: 1rem;
+			}
+			.form-control:focus {
+				border-color: var(--primary-color);
+				box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+			}
+			.form-icon {
+				position: absolute;
+				left: 1rem;
+				top: 50%;
+				transform: translateY(-50%);
+				cursor: pointer;
+				color: #6c757d;
+			}
+			.password-toggle {
+				position: absolute;
+				right: 1rem;
+				top: 50%;
+				transform: translateY(-50%);
+				cursor: pointer;
+				color: #6c757d;
+			}
+			.register-btn {
+				background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+				border: none;
+				padding: 0.8rem 2rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				border-radius: 10px;
+				transition: all 0.3s ease;
+				width: 100%;
+			}
+			.register-btn:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+			}
+			.brand-image {
+				max-width: 100%;
+				height: auto;
+				border-radius: 15px;
+				box-shadow: 
+					0 10px 30px rgba(0, 0, 0, 0.1),
+					0 0 20px rgba(0, 123, 255, 0.5),
+					0 0 40px rgba(0, 123, 255, 0.3);
+				animation: flipHorizontal 6s ease-in-out infinite, glowEffect 2s ease-in-out infinite;
+				transform-origin: center center;
+				filter: drop-shadow(0 0 10px rgba(0, 123, 255, 0.4));
+			}
+			.brand-image:hover {
+				transform: scale(1.02);
+			}
+			.alert {
+				border-radius: 10px;
+				padding: 1rem;
+				margin-bottom: 1.5rem;
+				border: none;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+			.register-footer {
+				background: #f8f9fa;
+				padding: 1.5rem;
+				text-align: center;
+				border-top: 1px solid #e9ecef;
+			}
+			.register-footer a {
+				color: #007bff;
+				font-weight: 600;
+				text-decoration: none;
+				padding: 0.5rem 1rem;
+				border-radius: 20px;
+				transition: all 0.3s ease;
+				margin-left: 0.5rem;
+				display: inline-block;
+			}
+			.register-footer a:hover {
+				color: #ffffff;
+				background: linear-gradient(to right, #007bff, #0056b3);
+				text-decoration: none;
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+			}
+			.file-upload {
+				position: relative;
+				display: inline-block;
+				width: 100%;
+			}
+			.file-upload .file-input {
+				display: none;
+			}
+			.file-upload-label {
+				display: block;
+				padding: 0.8rem 1rem;
+				background: #f8f9fa;
+				border: 2px dashed #dee2e6;
+				border-radius: 10px;
+				text-align: center;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+			.file-upload-label:hover {
+				background: #e9ecef;
+				border-color: #007bff;
+			}
+			.preview-image {
+				max-width: 100px;
+				margin-top: 1rem;
+				border-radius: 10px;
+				display: none;
+			}
+			@media (max-width: 768px) {
+				.register-container {
+					padding: 1rem;
+				}
+				.register-title {
+					font-size: 1.5rem;
+				}
+			}
+			@keyframes flipHorizontal {
+				0% {
+					transform: rotateY(0deg);
+				}
+				15% {
+					transform: rotateY(360deg);
+				}
+				100% {
+					transform: rotateY(360deg);
+				}
+			}
+			@keyframes glowEffect {
+				0% {
+					box-shadow: 
+						0 10px 30px rgba(0, 0, 0, 0.1),
+						0 0 20px rgba(0, 123, 255, 0.5),
+						0 0 40px rgba(0, 123, 255, 0.3);
+				}
+				50% {
+					box-shadow: 
+						0 10px 30px rgba(0, 0, 0, 0.1),
+						0 0 30px rgba(0, 123, 255, 0.7),
+						0 0 50px rgba(0, 123, 255, 0.5);
+				}
+				100% {
+					box-shadow: 
+						0 10px 30px rgba(0, 0, 0, 0.1),
+						0 0 20px rgba(0, 123, 255, 0.5),
+						0 0 40px rgba(0, 123, 255, 0.3);
+				}
+			}
+		</style>
+
+		<div class="register-container">
+			<div class="container">
+				<div class="row align-items-center justify-content-center">
+					<div class="col-lg-5 mb-5 mb-lg-0">
+						<img src="img/logo.png" alt="Logo" class="brand-image">
+					</div>
+					<div class="col-lg-7">
+						<div class="register-card">
+							<div class="register-header">
+								<h1 class="register-title">Hesap Oluştur</h1>
+								<p class="register-subtitle">Hemen üye ol ve alışverişe başla</p>
+							</div>
+
+							<div class="register-body">
+								<!-- Alerts -->
+								<th:block th:if="${session.succMsg}">
+									<div class="alert alert-success">
+										<i class="fas fa-check-circle"></i>
+										[[${session.succMsg}]]
+									</div>
+									<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+								</th:block>
+
+								<th:block th:if="${session.errorMsg}">
+									<div class="alert alert-danger">
+										<i class="fas fa-exclamation-circle"></i>
+										[[${session.errorMsg}]]
+									</div>
+									<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+								</th:block>
+
+								<form action="/saveUser" method="post" enctype="multipart/form-data" 
+									  id="userRegister" novalidate>
+									<div class="row g-3">
+										<div class="col-md-6">
+											<div class="form-group">
+												<i class="fas fa-user form-icon"></i>
+												<input type="text" class="form-control" name="name" 
+													   placeholder="Ad Soyad" required>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<i class="fas fa-phone form-icon"></i>
+												<input type="tel" class="form-control" name="mobileNumber" 
+													   placeholder="Telefon Numarası" required>
+											</div>
+										</div>
+										<div class="col-12">
+											<div class="form-group">
+												<i class="fas fa-envelope form-icon"></i>
+												<input type="email" class="form-control" name="email" 
+													   placeholder="E-posta Adresi" required>
+											</div>
+										</div>
+										<div class="col-12">
+											<div class="form-group">
+												<i class="fas fa-map-marker-alt form-icon"></i>
+												<input type="text" class="form-control" name="address" 
+													   placeholder="Adres" required>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<i class="fas fa-city form-icon"></i>
+												<input type="text" class="form-control" name="city" 
+													   placeholder="Şehir" required>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<i class="fas fa-map form-icon"></i>
+												<input type="text" class="form-control" name="state" 
+													   placeholder="İlçe" required>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<i class="fas fa-map-pin form-icon"></i>
+												<input type="text" class="form-control" name="pincode" 
+													   placeholder="Posta Kodu" required>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<i class="fas fa-lock form-icon"></i>
+												<input type="password" class="form-control" name="password" 
+													   id="pass" placeholder="Şifre" required>
+												<i class="fas fa-eye password-toggle" data-target="pass"></i>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<i class="fas fa-lock form-icon"></i>
+												<input type="password" class="form-control" name="confirmpassword" 
+													   id="confirmPass" placeholder="Şifreyi Onayla" required>
+												<i class="fas fa-eye password-toggle" data-target="confirmPass"></i>
+											</div>
+										</div>
+										<div class="col-12">
+											<div class="file-upload">
+												<input type="file" name="img" class="file-input" id="profileImage" 
+													   accept="image/*">
+												<label for="profileImage" class="file-upload-label">
+													<i class="fas fa-cloud-upload-alt me-2"></i>
+													Profil Fotoğrafı Seç
+												</label>
+												<img id="imagePreview" class="preview-image" alt="Önizleme">
+											</div>
+										</div>
+									</div>
+
+									<button type="submit" class="register-btn mt-4">
+										<i class="fas fa-user-plus me-2"></i>
+										Kayıt Ol
+									</button>
+								</form>
+							</div>
+
+							<div class="register-footer">
+								Zaten hesabınız var mı? 
+								<a href="/signin">
+									<i class="fas fa-sign-in-alt me-1"></i>
+									Giriş Yap
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				// Şifre göster/gizle fonksiyonu
+				const toggles = document.querySelectorAll('.password-toggle');
+				toggles.forEach(toggle => {
+					toggle.addEventListener('click', function() {
+						const targetId = this.getAttribute('data-target');
+						const input = document.getElementById(targetId);
+						const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+						input.setAttribute('type', type);
+						this.classList.toggle('fa-eye');
+						this.classList.toggle('fa-eye-slash');
+					});
+				});
+
+				// Şifre eşleşme kontrolü
+				const form = document.getElementById('userRegister');
+				const pass = document.getElementById('pass');
+				const confirmPass = document.getElementById('confirmPass');
+
+				form.addEventListener('submit', function(e) {
+					if (pass.value !== confirmPass.value) {
+						e.preventDefault();
+						alert('Şifreler eşleşmiyor!');
+					}
+				});
+
+				// Resim önizleme
+				const imageInput = document.getElementById('profileImage');
+				const imagePreview = document.getElementById('imagePreview');
+				const uploadLabel = document.querySelector('.file-upload-label');
+
+				imageInput.addEventListener('change', function() {
+					const file = this.files[0];
+					if (file) {
+						const reader = new FileReader();
+						reader.onload = function(e) {
+							imagePreview.src = e.target.result;
+							imagePreview.style.display = 'block';
+							uploadLabel.innerHTML = '<i class="fas fa-check me-2"></i>' + file.name;
+						}
+						reader.readAsDataURL(file);
+					}
+				});
+			});
+		</script>
+	</section>
+</body>
+</html>

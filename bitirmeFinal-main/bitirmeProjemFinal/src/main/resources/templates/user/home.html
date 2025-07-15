@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Ana Sayfa | Akcan</title>
+</head>
+<body>
+	<section>
+		<style>
+			.home-container {
+				min-height: 100vh;
+				background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+			}
+			
+			/* Hero Section */
+			.hero-section {
+				background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+					url('/img/hero-bg.jpg');
+				background-size: cover;
+				background-position: center;
+				padding: 8rem 0;
+				color: white;
+				text-align: center;
+				margin-bottom: 4rem;
+			}
+			
+			.hero-title {
+				font-size: 3.5rem;
+				font-weight: 700;
+				margin-bottom: 1.5rem;
+				animation: fadeInDown 1s ease;
+			}
+			
+			.hero-subtitle {
+				font-size: 1.5rem;
+				margin-bottom: 2rem;
+				opacity: 0.9;
+				animation: fadeInUp 1s ease;
+			}
+			
+			.hero-btn {
+				background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+				color: white;
+				padding: 1rem 2.5rem;
+				border-radius: 50px;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				transition: all 0.3s ease;
+				animation: fadeInUp 1.2s ease;
+			}
+			
+			.hero-btn:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+				color: white;
+			}
+			
+			/* Featured Categories */
+			.categories-section {
+				padding: 4rem 0;
+			}
+			
+			.section-title {
+				font-size: 2.5rem;
+				color: #2c3e50;
+				text-align: center;
+				margin-bottom: 3rem;
+				font-weight: 700;
+				position: relative;
+			}
+			
+			.section-title::after {
+				content: '';
+				position: absolute;
+				bottom: -15px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 80px;
+				height: 4px;
+				background: linear-gradient(to right, #007bff, #0056b3);
+				border-radius: 2px;
+			}
+			
+			.category-card {
+				background: white;
+				border-radius: 15px;
+				overflow: hidden;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				transition: all 0.3s ease;
+				margin-bottom: 2rem;
+			}
+			
+			.category-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+			}
+			
+			.category-img {
+				height: 200px;
+				width: 100%;
+				object-fit: cover;
+			}
+			
+			.category-content {
+				padding: 1.5rem;
+				text-align: center;
+			}
+			
+			.category-title {
+				font-size: 1.5rem;
+				color: #2c3e50;
+				margin-bottom: 1rem;
+				font-weight: 600;
+			}
+			
+			.category-description {
+				color: #6c757d;
+				margin-bottom: 1.5rem;
+				line-height: 1.6;
+			}
+			
+			.category-btn {
+				background: transparent;
+				color: #007bff;
+				border: 2px solid #007bff;
+				padding: 0.5rem 1.5rem;
+				border-radius: 50px;
+				font-weight: 600;
+				transition: all 0.3s ease;
+			}
+			
+			.category-btn:hover {
+				background: #007bff;
+				color: white;
+				transform: translateY(-2px);
+			}
+			
+			/* Featured Products */
+			.products-section {
+				padding: 4rem 0;
+				background: white;
+			}
+			
+			.product-card {
+				background: white;
+				border-radius: 15px;
+				overflow: hidden;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				transition: all 0.3s ease;
+				margin-bottom: 2rem;
+			}
+			
+			.product-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+			}
+			
+			.product-img {
+				height: 250px;
+				width: 100%;
+				object-fit: cover;
+			}
+			
+			.product-content {
+				padding: 1.5rem;
+			}
+			
+			.product-category {
+				color: #6c757d;
+				font-size: 0.9rem;
+				margin-bottom: 0.5rem;
+			}
+			
+			.product-title {
+				font-size: 1.3rem;
+				color: #2c3e50;
+				margin-bottom: 1rem;
+				font-weight: 600;
+				height: 3rem;
+				overflow: hidden;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+			}
+			
+			.product-price {
+				font-size: 1.5rem;
+				color: #28a745;
+				font-weight: 700;
+				margin-bottom: 1rem;
+			}
+			
+			.product-btn {
+				background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+				color: white;
+				width: 100%;
+				padding: 0.8rem;
+				border-radius: 10px;
+				font-weight: 600;
+				transition: all 0.3s ease;
+			}
+			
+			.product-btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+				color: white;
+			}
+			
+			/* Features Section */
+			.features-section {
+				padding: 4rem 0;
+			}
+			
+			.feature-card {
+				text-align: center;
+				padding: 2rem;
+				background: white;
+				border-radius: 15px;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+				transition: all 0.3s ease;
+				height: 100%;
+			}
+			
+			.feature-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+			}
+			
+			.feature-icon {
+				font-size: 3rem;
+				color: #007bff;
+				margin-bottom: 1.5rem;
+			}
+			
+			.feature-title {
+				font-size: 1.5rem;
+				color: #2c3e50;
+				margin-bottom: 1rem;
+				font-weight: 600;
+			}
+			
+			.feature-description {
+				color: #6c757d;
+				line-height: 1.6;
+			}
+			
+			/* Newsletter Section */
+			.newsletter-section {
+				padding: 4rem 0;
+				background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+				color: white;
+				text-align: center;
+			}
+			
+			.newsletter-title {
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+				font-weight: 700;
+			}
+			
+			.newsletter-description {
+				font-size: 1.2rem;
+				margin-bottom: 2rem;
+				opacity: 0.9;
+			}
+			
+			.newsletter-form {
+				max-width: 500px;
+				margin: 0 auto;
+			}
+			
+			.newsletter-input {
+				border: none;
+				border-radius: 50px;
+				padding: 1rem 1.5rem;
+				font-size: 1.1rem;
+				width: 100%;
+				margin-bottom: 1rem;
+			}
+			
+			.newsletter-btn {
+				background: white;
+				color: #007bff;
+				border: none;
+				border-radius: 50px;
+				padding: 1rem 2.5rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				transition: all 0.3s ease;
+			}
+			
+			.newsletter-btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+			}
+			
+			/* Animations */
+			@keyframes fadeInDown {
+				from {
+					opacity: 0;
+					transform: translateY(-20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			
+			/* Responsive */
+			@media (max-width: 992px) {
+				.hero-title {
+					font-size: 2.5rem;
+				}
+				
+				.hero-subtitle {
+					font-size: 1.2rem;
+				}
+				
+				.section-title {
+					font-size: 2rem;
+				}
+			}
+			
+			@media (max-width: 768px) {
+				.hero-section {
+					padding: 6rem 0;
+				}
+				
+				.hero-title {
+					font-size: 2rem;
+				}
+				
+				.category-img {
+					height: 150px;
+				}
+				
+				.product-img {
+					height: 200px;
+				}
+			}
+		</style>
+
+		<div class="home-container">
+			<!-- Hero Section -->
+			<div class="hero-section">
+				<div class="container">
+					<h1 class="hero-title">Akcan'a Hoş Geldiniz</h1>
+					<p class="hero-subtitle">Kaliteli ürünler, uygun fiyatlar ve hızlı teslimat</p>
+					<a href="#products" class="btn hero-btn">
+						<i class="fas fa-shopping-cart me-2"></i>Alışverişe Başla
+					</a>
+				</div>
+			</div>
+
+			<!-- Featured Categories -->
+			<div class="categories-section">
+				<div class="container">
+					<h2 class="section-title">Popüler Kategoriler</h2>
+					<div class="row">
+						<div class="col-md-4" th:each="category : ${categories}">
+							<div class="category-card">
+								<img th:src="@{'/img/category/'+${category.image}}"
+									class="category-img" th:alt="${category.title}">
+								<div class="category-content">
+									<h3 class="category-title">[[${category.title}]]</h3>
+									<p class="category-description">[[${category.description}]]</p>
+									<a th:href="@{'/view-products/'+${category.id}}"
+										class="btn category-btn">Ürünleri Gör</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Featured Products -->
+			<div class="products-section" id="products">
+				<div class="container">
+					<h2 class="section-title">Öne Çıkan Ürünler</h2>
+					<div class="row">
+						<div class="col-md-3" th:each="p : ${products}">
+							<div class="product-card">
+								<img th:src="@{'/img/product/'+${p.image}}"
+									class="product-img" th:alt="${p.title}">
+								<div class="product-content">
+									<div class="product-category">[[${p.category.title}]]</div>
+									<h3 class="product-title">[[${p.title}]]</h3>
+									<div class="product-price">₺[[${p.price}]]</div>
+									<a th:href="@{'/view-product/'+${p.id}}"
+										class="btn product-btn">
+										<i class="fas fa-shopping-cart me-2"></i>Satın Al
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Features Section -->
+			<div class="features-section">
+				<div class="container">
+					<h2 class="section-title">Neden Bizi Tercih Etmelisiniz?</h2>
+					<div class="row">
+						<div class="col-md-3">
+							<div class="feature-card">
+								<i class="fas fa-truck feature-icon"></i>
+								<h3 class="feature-title">Hızlı Teslimat</h3>
+								<p class="feature-description">Siparişleriniz en kısa sürede kapınızda</p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="feature-card">
+								<i class="fas fa-shield-alt feature-icon"></i>
+								<h3 class="feature-title">Güvenli Alışveriş</h3>
+								<p class="feature-description">%100 güvenli ödeme sistemi</p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="feature-card">
+								<i class="fas fa-undo feature-icon"></i>
+								<h3 class="feature-title">Kolay İade</h3>
+								<p class="feature-description">14 gün içinde ücretsiz iade imkanı</p>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="feature-card">
+								<i class="fas fa-headset feature-icon"></i>
+								<h3 class="feature-title">7/24 Destek</h3>
+								<p class="feature-description">Her zaman yanınızdayız</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Newsletter Section -->
+			<div class="newsletter-section">
+				<div class="container">
+					<h2 class="newsletter-title">Fırsatları Kaçırmayın!</h2>
+					<p class="newsletter-description">En yeni ürünler ve özel indirimlerden haberdar olun</p>
+					<form class="newsletter-form">
+						<div class="row justify-content-center">
+							<div class="col-md-8">
+								<input type="email" class="newsletter-input"
+									placeholder="E-posta adresinizi girin">
+								<button type="submit" class="btn newsletter-btn">
+									<i class="fas fa-paper-plane me-2"></i>Abone Ol
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
